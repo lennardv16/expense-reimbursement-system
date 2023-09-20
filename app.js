@@ -1,15 +1,21 @@
 const express = require('express');
 const app = express();
-const PORT = 3000;
+const routes = require('/routes');
 const bodyParser = require('body-parser');
+const reqLogger = require('./middleware/logger');
+const uuid = require('uuid');
+
+const userDAO = require('./dao/userDAO');
 
 // Middleware
 app.use(bodyParser.json());
 
-// Routes for employees and managers
-app.use('/employees', require('./routes/employees'));
-app.use('/managers', require('./routes/managers'));
+app.use(reqLogger);
 
+// Add request routing
+app.use(routes);
+
+const PORT = 3000;
 app.listen(PORT, () => {
   console.log('Server is running, you better catch it!');
 });
