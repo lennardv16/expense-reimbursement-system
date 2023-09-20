@@ -1,10 +1,8 @@
 const AWS = require('aws-sdk');
-const Account = require('./models/account');
+const dynamoDB = new AWS.DynamoDB.DocumentClient();
 
 AWS.config.update({
     region: 'us-east-1',
 });
 
-class accountDAO() {
-
-}
+module.exports = dynamoDB;
