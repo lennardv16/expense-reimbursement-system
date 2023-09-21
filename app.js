@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const routes = require('/routes');
+const userRoutes = require('/routes');
 const bodyParser = require('body-parser');
 const reqLogger = require('./middleware/logger');
 const uuid = require('uuid');
@@ -12,8 +12,12 @@ app.use(bodyParser.json());
 
 app.use(reqLogger);
 
+// Body Parsing
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 // Add request routing
-app.use(routes);
+app.use('/users', userRoutes);
 
 const PORT = 3000;
 app.listen(PORT, () => {
