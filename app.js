@@ -1,9 +1,8 @@
 const express = require('express');
 const app = express();
-const userRoutes = require('/routes');
+const routes = require('./routes/userRoutes');
 const bodyParser = require('body-parser');
 const reqLogger = require('./middleware/logger');
-const uuid = require('uuid');
 
 const userDAO = require('./dao/userDAO');
 
@@ -17,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Add request routing
-app.use('/users', userRoutes);
+app.use('/', routes);
 
 const PORT = 3000;
 app.listen(PORT, () => {

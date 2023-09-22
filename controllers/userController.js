@@ -1,3 +1,1 @@
-function userLogin(req, res) {
-    
-}
+const userDAO = require('./userDAO');

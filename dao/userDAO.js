@@ -1,34 +1,45 @@
-const ddb = require('./dynamoDB');
+const uuid = require('uuid');
+const {DynamoDBClient} = require('@aws-sdk/client-dynamodb');
+const {
+  DynamoDBDocumentClient,
+  PutCommand,
+  GetCommand,
+  UpdateCommand,
+  DeleteCommand,
+  ScanCommand,
+} = require('@aws-sdk/lib-dynamodb');
 
-// Function to register a new user
-const registerUser = async (user_id, username, password, role) => {
-  const params = {
-    TableName: 'users',
-    Item: {
-      username: username,
-      password: password,
-      role: 'employee', // Default role
-    },
+const ddb = new DynamoDBClient({region: 'us-east-1'});
+const client = DynamoDBDocumentClient.from(ddb);
+
+const createUser = async () => {
+  const cmd = new PutCommand({
+    TableName: users,
+    Item: username,
     ConditionExpression: 'attribute_not_exists(username)',
-  };
+  });
 
-  await ddb.put(params).promise();
-  return params.Item;
-};
+  const res = await client.send(cmd);
+}
 
-const userLogin = async (req, res) => {};
+const getUsers = async () => {
+  const cmd = new ScanCommand({
+    TableName: users,
+  });
+
+  const res = await client.send(cmd);
+}
 
 const getUser = async (username) => {
-  const params = {
-    TableName: 'users',
+  const cmd = new GetCommand({
+    TableName: users,
     Key: {
-      username: username,
-    },
-  };
+      username,
+    }
+  });
 
-  const user = await ddb.get(params).promise();
-  return user.Item;
-};
+  const res = await client.send(cmd);
+}
 
 const updateUser = async (user_id, username, password, role) => {
   const params = {
@@ -50,19 +61,20 @@ const updateUser = async (user_id, username, password, role) => {
   return updatedUser.Attributes;
 };
 
-const deleteUser = async (user_id) => {
-  const params = {
+const deleteUser = async () => {
+  const cmd = new DeleteCommand({
     TableName: 'users',
-    Key: {
-      user_id: user_id,
-    },
-  };
+    Item: {
+      username,
+    }
+  });
 
-  await dynamoDB.delete(params).promise();
-};
+  const res = await client.send(cmd);
+}
 
 module.exports = {
-  registerUser,
+  createUser,
+  getUsers,
   getUser,
   updateUser,
   deleteUser,
