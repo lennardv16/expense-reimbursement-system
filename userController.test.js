@@ -10,7 +10,7 @@ const getUsers = async () => {
   }
 };
 
-const getByUsername = async (username) => {
+const getUser = async (username) => {
   try {
     const user = await dao.getByUsername(username);
     return { success: true, user };
@@ -41,9 +41,8 @@ const deleteUser = async (username) => {
 };
 
 module.exports = {
-  createUser,
   getUsers,
-  getByUsername,
+  getUser,
   updateUser,
   deleteUser,
 };
