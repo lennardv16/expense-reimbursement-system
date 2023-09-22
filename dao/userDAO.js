@@ -1,5 +1,5 @@
 const uuid = require('uuid');
-const {DynamoDBClient} = require('@aws-sdk/client-dynamodb');
+const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const {
   DynamoDBDocumentClient,
   PutCommand,
@@ -9,10 +9,10 @@ const {
   ScanCommand,
 } = require('@aws-sdk/lib-dynamodb');
 
-const ddb = new DynamoDBClient({region: 'us-east-1'});
+const ddb = new DynamoDBClient({ region: 'us-east-1' });
 const client = DynamoDBDocumentClient.from(ddb);
 
-const createUser = async () => {
+const createUser = async (user) => {
   const cmd = new PutCommand({
     TableName: users,
     Item: username,
@@ -20,7 +20,7 @@ const createUser = async () => {
   });
 
   const res = await client.send(cmd);
-}
+};
 
 const getUsers = async () => {
   const cmd = new ScanCommand({
@@ -28,18 +28,18 @@ const getUsers = async () => {
   });
 
   const res = await client.send(cmd);
-}
+};
 
 const getUser = async (username) => {
   const cmd = new GetCommand({
     TableName: users,
     Key: {
       username,
-    }
+    },
   });
 
   const res = await client.send(cmd);
-}
+};
 
 const updateUser = async (user_id, username, password, role) => {
   const params = {
@@ -66,11 +66,11 @@ const deleteUser = async () => {
     TableName: 'users',
     Item: {
       username,
-    }
+    },
   });
 
   const res = await client.send(cmd);
-}
+};
 
 module.exports = {
   createUser,

@@ -1,22 +1,17 @@
 const express = require('express');
-const app = express();
-const routes = require('./routes/userRoutes');
 const bodyParser = require('body-parser');
-const reqLogger = require('./middleware/logger');
+const cookieParser = require('cookie-parser');
 
-const userDAO = require('./dao/userDAO');
+const app = express();
 
 // Middleware
 app.use(bodyParser.json());
+app.use 
+app.use(cookieParser());
 
-app.use(reqLogger);
-
-// Body Parsing
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
 
 // Add request routing
-app.use('/', routes);
+app.use(userRoutes);
 
 const PORT = 3000;
 app.listen(PORT, () => {
