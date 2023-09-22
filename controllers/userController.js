@@ -1,4 +1,4 @@
-const userDAO = require('./dao/userDAO');
+const userDAO = require('../dao/userDAO');
 
 const createUser = async (username) => {
   try {
@@ -32,12 +32,7 @@ const getUser = async (username) => {
 
 const updateUser = async (user_id, username, password, role) => {
   try {
-    const updatedUser = await userDAO.updateUser(
-      user_id,
-      username,
-      password,
-      role
-    );
+    const updatedUser = await userDAO.updateUser(user_id, username, password, role);
     return { success: true, updatedUser };
   } catch (error) {
     console.error('Error updating user:', error);

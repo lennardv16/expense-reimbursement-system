@@ -1,4 +1,4 @@
-const tixDAO = require('./ticketDAO');
+const tixDAO = require('../dao/ticketDAO');
 
 // Use async to create a function for creating tickets by the user
 const createTicket = async (ticket) => {
@@ -25,7 +25,7 @@ const getTicketById = async (id) => {
   try {
     const ticket = await tixDAO.getTicketById(id);
     return ticket;
-  }  (error) {
+  }  catch(error)  {
     console.log(error);
   }
 };
@@ -38,5 +38,3 @@ const updateTicketById = async (id, ticket) => {
   } catch (error) {
     console.log(error);
   }};
-
-// Use

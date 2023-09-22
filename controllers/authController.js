@@ -1,1 +1,1 @@
-const User = require('./dao/userDAO');
+const User = require('../dao/userDAO');

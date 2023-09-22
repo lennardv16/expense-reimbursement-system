@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-const tixController = require('./ticketController');
+const tixController = require('../controllers/ticketController');
 
 // Manager Actions
 router.get('/', (req, res) => {});
