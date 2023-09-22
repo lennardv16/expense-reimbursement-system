@@ -1,15 +1,5 @@
 const dao = require('./userDao.test');
 
-const createUser = async (username) => {
-  try {
-    await dao.createUser(username);
-    return { success: true, message: 'User created successfully' };
-  } catch (error) {
-    console.error('Error creating user:', error);
-    return { success: false, message: 'User creation failed' };
-  }
-};
-
 const getUsers = async () => {
   try {
     const users = await dao.getUsers();
@@ -20,9 +10,9 @@ const getUsers = async () => {
   }
 };
 
-const getUser = async (username) => {
+const getByUsername = async (username) => {
   try {
-    const user = await dao.getUser(username);
+    const user = await dao.getByUsername(username);
     return { success: true, user };
   } catch (error) {
     console.error('Error getting user:', error);
@@ -53,7 +43,7 @@ const deleteUser = async (username) => {
 module.exports = {
   createUser,
   getUsers,
-  getUser,
+  getByUsername,
   updateUser,
   deleteUser,
 };

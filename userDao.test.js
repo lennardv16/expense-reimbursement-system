@@ -12,38 +12,50 @@ const {
 const ddb = new DynamoDBClient({ region: 'us-east-1' });
 const client = DynamoDBDocumentClient.from(ddb);
 
-const createUser = async (user) => {
+const createUser = async () => {
   const cmd = new PutCommand({
-    TableName: 'users',
-    Item: username,
-    ConditionExpression: 'attribute_not_exists(username)',
+    TableName: 'Users',
+    Item: {
+      username,
+    },
   });
 
-  const res = await client.send(cmd);
+  try {
+    const res = await client.send(cmd);
+    return res;
+  } catch (err) {
+    console.error('User cannot be created', err);
+    throw new Error('User creation failed');
+  }
 };
 
 const getUsers = async () => {
   const cmd = new ScanCommand({
-    TableName: users,
+    TableName: 'Users',
+    Item: {
+      username,
+    },
   });
 
   const res = await client.send(cmd);
+  return res.Item;
 };
 
-const getUser = async (username) => {
+const getByUsername = async (username) => {
   const cmd = new GetCommand({
-    TableName: users,
+    TableName: 'Users',
     Key: {
       username,
     },
   });
 
   const res = await client.send(cmd);
+  return res.Item;
 };
 
 const updateUser = async (user_id, username, password, role) => {
   const cmd = new UpdateCommand({
-    TableName: 'users',
+    TableName: 'Users',
     Key: {
       user_id: user_id,
     },
@@ -62,7 +74,7 @@ const updateUser = async (user_id, username, password, role) => {
 
 const deleteUser = async () => {
   const cmd = new DeleteCommand({
-    TableName: 'users',
+    TableName: 'Users',
     Item: {
       username,
     },
@@ -74,7 +86,7 @@ const deleteUser = async () => {
 module.exports = {
   createUser,
   getUsers,
-  getUser,
+  getByUsername,
   updateUser,
   deleteUser,
 };
