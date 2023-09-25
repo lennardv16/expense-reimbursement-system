@@ -1,4 +1,4 @@
-const tixDAO = require('../dao/ticketDAO');
+const tixDAO = require('./ticket');
 
 const createTicket = async (ticket) => {
   try {

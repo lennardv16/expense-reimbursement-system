@@ -1,57 +1,56 @@
-const userDAO = require('../dao/userDAO');
+const dao = require('../dao/user');
 
-const createUser = async (username) => {
+const getUsers = async (req, res) => {
   try {
-    await userDAO.createUser(username);
-    return { success: true, message: 'User created successfully' };
-  } catch (error) {
-    console.error('Error creating user:', error);
-    return { success: false, message: 'User creation failed' };
+    const data = await dao.getUsers();
+    return res.status(200).json(data.Items);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ success: false, message: 'Failed to get users' });
   }
 };
 
-const getUsers = async () => {
-  try {
-    const users = await userDAO.getUsers();
-    return { success: true, users };
-  } catch (error) {
-    console.error('Error getting users:', error);
-    return { success: false, message: 'Failed to get users' };
-  }
-};
+const getUser = async (req, res) => {
+  const username = req.params.username;
 
-const getUser = async (username) => {
   try {
-    const user = await userDAO.getUser(username);
-    return { success: true, user };
+    const data = await dao.getUser(username);
+    if (data.Item) {
+      return res.status(200).json(data.Item);
+    } else {
+      return res.status(404).json({ message: 'User not found' });
+    }
   } catch (error) {
     console.error('Error getting user:', error);
-    return { success: false, message: 'User retrieval failed' };
+    return res.status(500).json({ success: false, message: 'User retrieval failed' });
   }
 };
 
-const updateUser = async (user_id, username, password, role) => {
+const updateUser = async (req, res) => {
+  const user = req.body;
+
   try {
-    const updatedUser = await userDAO.updateUser(user_id, username, password, role);
-    return { success: true, updatedUser };
+    const updatedData = await dao.updateUser(user);
+    return res.status(200).json(updatedData.Attributes);
   } catch (error) {
     console.error('Error updating user:', error);
-    return { success: false, message: 'User update failed' };
+    return res.status(500).json({ success: false, message: 'User update failed' });
   }
 };
 
-const deleteUser = async (username) => {
+const deleteUser = async (req, res) => {
+  const username = req.params.username;
+
   try {
-    await userDAO.deleteUser(username);
-    return { success: true, message: 'User deleted successfully' };
+    await dao.deleteUser(username);
+    return res.status(200).json({ success: true, message: 'User deleted successfully' });
   } catch (error) {
     console.error('Error deleting user:', error);
-    return { success: false, message: 'User deletion failed' };
+    return res.status(500).json({ success: false, message: 'User deletion failed' });
   }
 };
 
 module.exports = {
-  createUser,
   getUsers,
   getUser,
   updateUser,

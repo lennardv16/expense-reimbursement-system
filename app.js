@@ -1,19 +1,15 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
-const userRoutes = require('./routes/userRoutes');
-
 const app = express();
+const bodyParser = require('body-parser');
+const userRoutes = require('./routes/userRoutes');
+const authRoutes = require('./routes/authRoutes');
 
-// Middleware
 app.use(bodyParser.json());
-app.use(cookieParser());
 
+app.use('/users', userRoutes);
+app.use('/', authRoutes);
 
-// Add request routing
-app.use(userRoutes);
-
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log('Server is running, you better catch it!');
+const port = 3000;
+app.listen(port, () => {
+  console.log(`The server is running, you better catch it!`);
 });
