@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 const userRoutes = require('./userRoutes.test');
 const authRoutes = require('./authRoutes.test');
 const userDao = require('./userDao.test');
-const uuid = require('uuid');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

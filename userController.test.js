@@ -1,26 +1,28 @@
 const dao = require('./userDao.test');
 
-const getUsers = async () => {
+const getUsers = async (req, res) => {
   try {
-    const users = await dao.getUsers();
-    return { success: true, users };
-  } catch (error) {
-    console.error('Error getting users:', error);
+    const users = await dao.users.getUsers();
+    return res.status(200).json(users);
+  } catch (err) {
+    console.error(err);
     return { success: false, message: 'Failed to get users' };
   }
 };
 
-const getUser = async (username) => {
+const getUser = async (req, res) => {
+  const { username } = req.body;
+
   try {
-    const user = await dao.getByUsername(username);
-    return { success: true, user };
+    const user = await dao.getUser(username);
+    return res.status(200).json(user);
   } catch (error) {
     console.error('Error getting user:', error);
     return { success: false, message: 'User retrieval failed' };
   }
 };
 
-const updateUser = async (user_id, username, password, role) => {
+const updateUser = async (req, res) => {
   try {
     const updatedUser = await dao.updateUser(user_id, username, password, role);
     return { success: true, updatedUser };

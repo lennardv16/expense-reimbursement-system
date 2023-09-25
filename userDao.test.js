@@ -12,36 +12,43 @@ const {
 const ddb = new DynamoDBClient({ region: 'us-east-1' });
 const client = DynamoDBDocumentClient.from(ddb);
 
-const createUser = async () => {
+const createUser = async (user) => {
+  const id = uuid.v4();
   const cmd = new PutCommand({
     TableName: 'Users',
     Item: {
+      user_id: id,
       username,
+      password,
+      role: 'employee', // Default role
     },
   });
 
   try {
     const res = await client.send(cmd);
-    return res;
+    return res.Item;
   } catch (err) {
     console.error('User cannot be created', err);
     throw new Error('User creation failed');
+
   }
+  return DynamoDBDocumentClient.scan(params).promise();
 };
 
 const getUsers = async () => {
   const cmd = new ScanCommand({
     TableName: 'Users',
-    Item: {
-      username,
-    },
   });
 
-  const res = await client.send(cmd);
-  return res.Item;
+  try {
+    const res = await client.send(cmd);
+  } catch (err) {
+    console.error('Error getting users:', err);
+    throw new Error('Failed to get users');
+  }
 };
 
-const getByUsername = async (username) => {
+const getUser = async (username) => {
   const cmd = new GetCommand({
     TableName: 'Users',
     Key: {
@@ -49,8 +56,13 @@ const getByUsername = async (username) => {
     },
   });
 
-  const res = await client.send(cmd);
-  return res.Item;
+  try {
+    const res = await client.send(cmd);
+    return res.Item;
+  } catch (error) {
+    console.error('Error getting user:', error);
+    throw new Error('User retrieval failed');
+  }
 };
 
 const updateUser = async (user_id, username, password, role) => {
@@ -86,7 +98,7 @@ const deleteUser = async () => {
 module.exports = {
   createUser,
   getUsers,
-  getByUsername,
+  getUser,
   updateUser,
   deleteUser,
 };
