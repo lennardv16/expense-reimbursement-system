@@ -1,4 +1,3 @@
-const uuid = require('uuid');
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const {
   DynamoDBDocumentClient,
@@ -9,12 +8,12 @@ const {
   ScanCommand,
 } = require('@aws-sdk/lib-dynamodb');
 
-const ddb = new DynamoDBClient({ region: 'us-east-1' });
-const client = DynamoDBDocumentClient.from(ddb);
+const db = new DynamoDBClient({ region: 'us-east-1' });
+const client = DynamoDBDocumentClient.from(db);
 
 function updateTix() {
   const params = {
-    TableName: 'users',
+    TableName: 'Users',
     Key: {
       user_id,
     },

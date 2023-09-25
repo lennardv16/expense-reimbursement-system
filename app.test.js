@@ -3,13 +3,13 @@ const app = express();
 const bodyParser = require('body-parser');
 const userRoutes = require('./userRoutes.test');
 const authRoutes = require('./authRoutes.test');
-const userDao = require('./userDao.test');
+const dao = require('./userDao.test');
 
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(express.json());
+// app.use(express.json());
 
-app.use('/', userRoutes);
+app.use('/users', userRoutes);
 app.use('/', authRoutes);
 
 const port = 3000;

@@ -2,7 +2,7 @@ const dao = require('./userDao.test');
 
 const getUsers = async (req, res) => {
   try {
-    const users = await dao.users.getUsers();
+    const users = await dao.getUsers();
     return res.status(200).json(users);
   } catch (err) {
     console.error(err);

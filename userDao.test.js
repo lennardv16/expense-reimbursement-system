@@ -1,4 +1,3 @@
-const uuid = require('uuid');
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const {
   DynamoDBDocumentClient,
@@ -9,30 +8,22 @@ const {
   ScanCommand,
 } = require('@aws-sdk/lib-dynamodb');
 
-const ddb = new DynamoDBClient({ region: 'us-east-1' });
-const client = DynamoDBDocumentClient.from(ddb);
+const db = new DynamoDBClient({ region: 'us-east-1' });
+const client = DynamoDBDocumentClient.from(db);
 
 const createUser = async (user) => {
-  const id = uuid.v4();
   const cmd = new PutCommand({
     TableName: 'Users',
     Item: {
-      user_id: id,
       username,
       password,
-      role: 'employee', // Default role
     },
   });
 
-  try {
-    const res = await client.send(cmd);
-    return res.Item;
-  } catch (err) {
-    console.error('User cannot be created', err);
-    throw new Error('User creation failed');
-
-  }
-  return DynamoDBDocumentClient.scan(params).promise();
+  const res = await client.send(cmd);
+  console.log(res);
+  return res;
+  // return await client.send(cmd);
 };
 
 const getUsers = async () => {
@@ -40,15 +31,13 @@ const getUsers = async () => {
     TableName: 'Users',
   });
 
-  try {
-    const res = await client.send(cmd);
-  } catch (err) {
-    console.error('Error getting users:', err);
-    throw new Error('Failed to get users');
-  }
+  const res = await client.send(cmd);
+  console.log(res);
+  return res;
+  // return await client.send(cmd);
 };
 
-const getUser = async (username) => {
+const getUser = async () => {
   const cmd = new GetCommand({
     TableName: 'Users',
     Key: {
@@ -56,35 +45,30 @@ const getUser = async (username) => {
     },
   });
 
-  try {
-    const res = await client.send(cmd);
-    return res.Item;
-  } catch (error) {
-    console.error('Error getting user:', error);
-    throw new Error('User retrieval failed');
-  }
+  const res = await client.send(cmd);
+  console.log(res);
+  return res;
 };
 
-const updateUser = async (user_id, username, password, role) => {
+const updateUser = async (username) => {
   const cmd = new UpdateCommand({
     TableName: 'Users',
     Key: {
-      user_id: user_id,
+      username,
     },
-    UpdateExpression: 'SET username = :username, password = :password, role = :role',
+    UpdateExpression: 'set role = :role',
     ExpressionAttributeValues: {
-      ':username': username,
-      ':password': password,
-      ':role': role,
+      ':role': 'manager', // Set role to manager
     },
     ReturnValues: 'ALL_NEW',
   });
 
-  const updatedUser = await ddb.update(params).promise();
-  return updatedUser.Attributes;
+  const res = await client.send(cmd);
+  console.log(res);
+  return res;
 };
 
-const deleteUser = async () => {
+const deleteUser = async (username) => {
   const cmd = new DeleteCommand({
     TableName: 'Users',
     Item: {
@@ -93,6 +77,8 @@ const deleteUser = async () => {
   });
 
   const res = await client.send(cmd);
+  console.log(res);
+  return res;
 };
 
 module.exports = {

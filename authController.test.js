@@ -1,53 +1,33 @@
-const bc = require('bcrypt');
 const dao = require('./userDao.test');
-const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const user = require('./userController.test');
 
 const register = async (req, res) => {
   const { username, password } = req.body;
 
-  if (!username || !password) {
-    return res.status(400).json({ message: 'Username and Password required' });
+  // Check if user already exists
+  const existingUser = await dao.getUser(username);
+  if (existingUser.Item) {
+    return res.status(400).json({ message: 'Username already exists.' });
   }
 
-  try {
-    const existingUser = await dao.getUser(username);
+  // Hash the password and set default role
+  const hashedPassword = await bcrypt.hash(password, 10);
+  await user.createUser({ username, password: hashedPassword, role: 'employee' });
 
-    if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' });
-    } else {
-      const newUser = dao.createUser(username, password,);
-    }
-  } catch (err) {
-    console.error('Error creating user', err);
-    res.status(500).json({ message: 'Internal server error' });
-  }
+  res.status(200).json({ message: 'Registration successful!' });
 };
 
 const login = async (req, res) => {
   const { username, password } = req.body;
 
-  if (!username || !password) {
-    return res.status(400).json({ message: 'Username and Password required' });
+  const user = await User.getUser(username);
+  if (!user.Item || !(await bcrypt.compare(password, user.Item.password))) {
+    return res.status(401).json({ message: 'Invalid username or password.' });
   }
 
-  try {
-    const existingUser = await dao.getUser(username);
-
-    if (!user) {
-      return res.status(401).json({ message: 'User not found' });
-    }
-
-    const passMatch = await bc.compare(password, user.password);
-
-    if (!passMatch) {
-      return res.status(401).json({ message: 'Incorrect password' });
-    }
-
-    res.status(200).json({ message: 'Login successful' });
-  } catch (error) {
-    console.error('Error logging in user:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
+  // In a real-world scenario, you'd probably issue a JWT or session here
+  res.status(200).json({ message: 'Logged in successfully!', user: user.Item });
 };
 
 module.exports = {
