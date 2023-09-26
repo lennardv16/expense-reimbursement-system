@@ -1,13 +1,19 @@
 const router = require('express').Router();
-const tixController = require('../controllers/ticketController');
+const ticket = require('../controllers/ticketController');
+const auth = require('../middleware/auth');
 
-// Manager Actions
-router.get('/', (req, res) => {});
-router.patch('/approve:id', (req, res) => {});
-router.patch('/deny/:id', (req, res) => {});
+// General Access
+router.get('/', ticket.getTickets);
 
-// User Actions
-router.post('/tickets', tixController.createTicket);
-router.get('/');
+// Manager Access
+router.get('/Pending', ticket.getPendingTickets);
+router.get('/:ticketId', ticket.getTicketById);
+router.get('/:username', ticket.getUserTickets);
+router.put('/approve/:ticketId', ticket.approveTicket);
+router.put('/deny/:ticketId', ticket.denyTicket);
+router.delete('/:ticketId', ticket.deleteTicket);
+
+// User Access
+router.post('/submit', ticket.createTicket);
 
 module.exports = router;

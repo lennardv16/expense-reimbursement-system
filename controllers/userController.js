@@ -27,7 +27,7 @@ const getUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  const user = req.body;
+  const username = req.params.username;
 
   try {
     const updatedData = await dao.updateUser(user);

@@ -1,5 +1,6 @@
 const dao = require('../dao/user');
 const jwt = require('jsonwebtoken');
+const SECRET_KEY = 'thisisasecret';
 
 const register = async (req, res) => {
   const username = req.body.username;
@@ -32,17 +33,30 @@ const login = async (req, res) => {
 
   try {
     const existingUser = await dao.getUser(username);
+
+    // Check if user exists and if password matches
     if (existingUser && existingUser.Item && existingUser.Item.password === password) {
-      return res.status(200).json({ message: 'Login Successful' });
+      // Generate JWT token
+      const token = jwt.sign(
+        {
+          username: existingUser.Item.username,
+          role: existingUser.Item.role,
+        },
+        SECRET_KEY,
+        {
+          expiresIn: '1d', // Token expires in 1 day
+        },
+      );
+
+      return res
+        .status(200)
+        .json({ message: 'Login Successful', user: existingUser.Item.username, token });
     } else {
-      return res.status(400).json({ message: 'Invalid Username or Password' });
+      return res.status(401).json({ message: 'Invalid Username or Password' });
     }
   } catch (err) {
     res.status(500).json({ message: 'Login failed', error: err.message });
   }
-
-  // In a real-world scenario, you'd probably issue a JWT or session here
-  res.status(200).json({ message: 'Logged in successfully!', user: user.Item });
 };
 
 module.exports = {
