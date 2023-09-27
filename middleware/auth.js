@@ -1,6 +1,6 @@
 const jwtUtil = require('../utils/jwtUtil');
 
-const isAuthenticated = (req, res, next) => {
+const isAuthenticated = async (req, res, next) => {
   const authHeader = req.headers.authorization || req.headers.Authorization;
 
   if (!authHeader) {
@@ -9,14 +9,15 @@ const isAuthenticated = (req, res, next) => {
 
   const token = authHeader.split(' ')[1]; //['Bearer', '<token>'];
 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-    if (err) {
-      return res.status(403).json({ message: 'Forbidden' });
-    }
+  try {
+    const decoded = await jwtUtil.verifyTokenAndReturnPayload(token);
 
     req.role = decoded.role;
+
     next();
-  });
+  } catch (err) {
+    return res.status(403).json({ message: 'Failed to authenticate' });
+  }
 };
 
 const isManager = async (req, res, next) => {

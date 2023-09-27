@@ -7,7 +7,7 @@ const createTicket = async (req, res) => {
   const description = req.body.description;
 
   if (!amount || !description) {
-    return res.status(400).json({ message: 'Username, Amount and Description required' });
+    return res.status(400).json({ message: 'Amount and Description required' });
   }
   const ticketId = uuid.v4();
 

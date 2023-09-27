@@ -4,8 +4,7 @@ const auth = require('../middleware/auth');
 
 // General Access
 router.get('/', auth.isAuthenticated, ticket.getTickets);
-router.get('/users/:username', auth.isAuthenticated, ticket.getUserTickets);
-
+router.get('/:username', auth.isAuthenticated, ticket.getUserTickets);
 
 // Manager Access
 router.get('/pending', auth.isManager, ticket.getPendingTickets);
