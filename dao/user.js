@@ -37,14 +37,11 @@ const updateUser = async (user) => {
     },
     UpdateExpression: 'set role = :role',
     ExpressionAttributeValues: {
-      ':role': user.role || 'manager',
+      ':role': user.role,
     },
     ReturnValues: 'ALL_NEW',
   };
-  const res = await db.update(params).promise();
-  console.log(res);
-  return res;
-  // return await db.update(params).promise();
+  return await db.update(params).promise();
 };
 
 const deleteUser = async (username) => {

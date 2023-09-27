@@ -1,67 +1,80 @@
-const jwt = require('jsonwebtoken');
+const jwtUtil = require('../utils/jwtUtil');
 
 const isAuthenticated = (req, res, next) => {
   const authHeader = req.headers.authorization || req.headers.Authorization;
 
-  if (!authHeader?.startsWith('Bearer ')) {
+  if (!authHeader) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
 
-  const token = authHeader.split(' ')[1];
+  const token = authHeader.split(' ')[1]; //['Bearer', '<token>'];
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
     if (err) {
       return res.status(403).json({ message: 'Forbidden' });
     }
 
-    req.username = decoded.UserInfo.username;
-    req.role = decoded.UserInfo.role;
+    req.role = decoded.role;
     next();
   });
 };
 
-const isManager = (req, res, next) => {
+const isManager = async (req, res, next) => {
   const authHeader = req.headers.authorization || req.headers.Authorization;
 
-  if (!authHeader?.startsWith('Bearer ')) {
-    return res.status(401).json({ message: 'Unauthorized' });
+  if (!authHeader) {
+    return res.status(401).json({ message: 'Authorization header missing' });
   }
 
-  const token = authHeader.split(' ')[1];
+  const token = authHeader.split(' ')[1]; //['Bearer', '<token>'];
 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-    if (err) {
-      return res.status(403).json({ message: 'Forbidden' });
+  if (!token) {
+    return res.status(401).json({ message: 'No token provided' });
+  }
+
+  try {
+    const decoded = await jwtUtil.verifyTokenAndReturnPayload(token);
+
+    req.username = decoded.username;
+    req.role = decoded.role;
+
+    if (req.role !== 'manager') {
+      return res.status(403).json({ message: 'You are not a manager!!!' });
     }
 
-    if (decoded.UserInfo.role !== 'manager') {
-      return res.status(401).json({ message: 'You are not a manager!!!' });
-    }
-
-    req.username = decoded.UserInfo.username;
-    req.role = decoded.UserInfo.role;
     next();
-  });
+  } catch (err) {
+    return res.status(403).json({ message: 'Forbidden' });
+  }
 };
 
-const isEmployee = (req, res, next) => {
+const isEmployee = async (req, res, next) => {
   const authHeader = req.headers.authorization || req.headers.Authorization;
 
-  if (!authHeader?.startsWith('Bearer ')) {
-    return res.status(401).json({ message: 'Unauthorized' });
+  if (!authHeader) {
+    return res.status(401).json({ message: 'Authorization header missing' });
   }
 
-  const token = authHeader.split(' ')[1];
+  const token = authHeader.split(' ')[1]; //['Bearer', '<token>'];
 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-    if (err) {
-      return res.status(403).json({ message: 'Forbidden' });
+  if (!token) {
+    return res.status(401).json({ message: 'No token provided' });
+  }
+
+  try {
+    const decoded = await jwtUtil.verifyTokenAndReturnPayload(token);
+
+    req.username = decoded.username;
+    req.role = decoded.role;
+
+    if (req.role !== 'employee') {
+      return res.status(403).json({ message: 'Forbidden: Not an employee' });
     }
 
-    req.username = decoded.UserInfo.username;
-    req.role = decoded.UserInfo.role;
     next();
-  });
+  } catch (err) {
+    return res.status(403).json({ message: 'Forbidden' });
+  }
 };
 
 module.exports = {

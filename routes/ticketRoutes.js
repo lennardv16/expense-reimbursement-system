@@ -3,17 +3,20 @@ const ticket = require('../controllers/ticketController');
 const auth = require('../middleware/auth');
 
 // General Access
-router.get('/', ticket.getTickets);
+router.get('/', auth.isAuthenticated, ticket.getTickets);
+router.get('/users/:username', auth.isAuthenticated, ticket.getUserTickets);
+
 
 // Manager Access
-router.get('/Pending', ticket.getPendingTickets);
-router.get('/:ticketId', ticket.getTicketById);
-router.get('/:username', ticket.getUserTickets);
-router.put('/approve/:ticketId', ticket.approveTicket);
-router.put('/deny/:ticketId', ticket.denyTicket);
-router.delete('/:ticketId', ticket.deleteTicket);
+router.get('/pending', auth.isManager, ticket.getPendingTickets);
+router.get('/:ticketId', auth.isManager, ticket.getTicketById);
+
+router.patch('/:ticketId/approve', auth.isManager, ticket.approveTicket);
+router.patch('/:ticketId/deny', auth.isManager, ticket.denyTicket);
+
+router.delete('/:ticketId', auth.isManager, ticket.deleteTicket);
 
 // User Access
-router.post('/submit', ticket.createTicket);
+router.post('/', auth.isEmployee, ticket.createTicket);
 
 module.exports = router;

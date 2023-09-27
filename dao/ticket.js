@@ -10,7 +10,6 @@ const createTicket = async (ticket) => {
   const params = {
     TableName: 'Tickets',
     Item: ticket,
-    status: 'Pending', // Default role
   };
   return await db.put(params).promise();
 };

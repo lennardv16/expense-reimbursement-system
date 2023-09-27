@@ -2,7 +2,7 @@ const dao = require('../dao/ticket');
 const uuid = require('uuid');
 
 const createTicket = async (req, res) => {
-  const username = req.user.username;
+  const username = req.username;
   const amount = req.body.amount;
   const description = req.body.description;
 
@@ -17,6 +17,7 @@ const createTicket = async (req, res) => {
       username,
       amount,
       description,
+      status: 'pending', // Default status
     });
     return res.status(201).json({ message: 'Ticket created successfully' });
   } catch (err) {
@@ -36,15 +37,15 @@ const getTickets = async (req, res) => {
 const getPendingTickets = async (req, res) => {
   const status = req.query.status;
 
+  if (status !== 'pending') {
+    return res.status(400).json({ message: 'Invalid status' });
+  }
+
   try {
-    if (status === 'Pending') {
-      const pendingTickets = await dao.getPendingTickets();
-      return res.status(200).json(pendingTickets);
-    } else {
-      return res.status(400).json({ message: 'Invalid status value' });
-    }
-  } catch (error) {
-    console.error('Error fetching pending tickets:', error);
+    const pendingTickets = await dao.getPendingTickets();
+    return res.status(200).json({ data: pendingTickets });
+  } catch (err) {
+    console.error('Error fetching pending tickets:', err);
     return res.status(500).json({ message: 'Failed to retrieve tickets' });
   }
 };
@@ -53,12 +54,12 @@ const getUserTickets = async (req, res) => {
   const username = req.params.username;
 
   try {
-    const tickets = await dao.getUserTickets(username);
-    res.status(200).json(tickets);
+    const data = await dao.getUserTickets(username);
+    res.status(200).json(data.Items);
   } catch (err) {
     res
       .status(500)
-      .json({ message: `Error retrieving tickets for username ${username}.`, error: err.message });
+      .json({ message: `Error retrieving tickets for ${username}.`, error: err.message });
   }
 };
 

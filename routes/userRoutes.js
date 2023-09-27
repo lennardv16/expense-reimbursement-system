@@ -8,6 +8,4 @@ router.get('/:username', userController.getUser);
 router.patch('/:username', userController.updateUser);
 router.delete('/:username', userController.deleteUser);
 
-// User Access
-
 module.exports = router;
