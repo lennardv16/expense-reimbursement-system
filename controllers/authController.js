@@ -39,7 +39,7 @@ const login = async (req, res) => {
       // Generate JWT token
       const token = jwtUtil.createJWT(existingUser.Item.username, existingUser.Item.role);
 
-      return res.status(200).json({ message: 'Login Successful', user: existingUser.Item.username, token });
+      return res.status(200).json({ message: `Welcome ${username}`, token });
     } else {
       return res.status(401).json({ message: 'Invalid Credentials' });
     }

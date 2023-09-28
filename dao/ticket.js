@@ -29,7 +29,7 @@ const getPendingTickets = async () => {
       '#s': 'status',
     },
     ExpressionAttributeValues: {
-      ':status': 'Pending',
+      ':status': 'pending',
     },
   };
   return await db.scan(params).promise();
@@ -68,8 +68,8 @@ const approveTicket = async (ticketId) => {
       '#s': 'status',
     },
     ExpressionAttributeValues: {
-      ':a': 'Approved',
-      ':p': 'Pending',
+      ':a': 'approved',
+      ':p': 'pending',
     },
     ReturnValues: 'ALL_NEW',
   };
@@ -88,8 +88,8 @@ const denyTicket = async (ticketId) => {
       '#s': 'status',
     },
     ExpressionAttributeValues: {
-      ':d': 'Denied',
-      ':p': 'Pending',
+      ':d': 'denied',
+      ':p': 'pending',
     },
     ReturnValues: 'ALL_NEW',
   };

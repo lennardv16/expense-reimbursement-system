@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const jwtUtil = require('../utils/jwtUtil');
 
 const isAuthenticated = async (req, res, next) => {
@@ -57,10 +58,6 @@ const isEmployee = async (req, res, next) => {
   }
 
   const token = authHeader.split(' ')[1]; //['Bearer', '<token>'];
-
-  if (!token) {
-    return res.status(401).json({ message: 'No token provided' });
-  }
 
   try {
     const decoded = await jwtUtil.verifyTokenAndReturnPayload(token);
