@@ -6,12 +6,12 @@ The Expense Reimbursement System (ERS) will manage the process of reimbursing em
 
 ## Technologies Used
 * JavaScript
-* Node.js
-* Express.js
+* NodeJS
+* ExpressJS
 * AWS DynamoDB
 
 ## Lessons Learned
-This project reinforces backend development concepts. I implemented a 3-tier architecture to design 
+I learned how to implement a 3-tier architecture for my REST API using ExpressJS. Using JWT to authenticate users so that managers and employees can access what they need to. I learned how to use IAM and DynamoDB to store the data for my API. I used Postman to test the functionality of my API to verify.
 
 ## Contributors
 * Lennard Vicente
