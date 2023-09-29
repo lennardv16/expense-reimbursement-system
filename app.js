@@ -5,7 +5,6 @@ const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
 const ticketRoutes = require('./routes/ticketRoutes');
 
-app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use('/users', userRoutes);

@@ -15,7 +15,7 @@ const createTicket = async (req, res) => {
   const ticketId = uuid.v4();
 
   try {
-    const newTicket = await dao.createTicket({
+    await dao.createTicket({
       ticketId,
       username,
       amount,
@@ -23,7 +23,7 @@ const createTicket = async (req, res) => {
       status: 'pending', // Default status
     });
     await dao.getTicketById(ticketId);
-    return res.status(201).json({ message: 'Ticket created successfully' });
+    return res.status(201).json({ message: 'Ticket created successfully', ticketId });
   } catch (err) {
     return res.status(500).json({ message: 'Error creating ticket', error: err.message });
   }
