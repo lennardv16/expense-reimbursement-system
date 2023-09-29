@@ -10,5 +10,8 @@ The Expense Reimbursement System (ERS) will manage the process of reimbursing em
 * Express.js
 * AWS DynamoDB
 
+## Lessons Learned
+This project reinforces backend development concepts. I implemented a 3-tier architecture to design 
+
 ## Contributors
 * Lennard Vicente
