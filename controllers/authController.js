@@ -1,4 +1,4 @@
-const dao = require('../dao/user');
+const dao = require('../models/user');
 const jwtUtil = require('../utils/jwtUtil');
 
 const register = async (req, res) => {

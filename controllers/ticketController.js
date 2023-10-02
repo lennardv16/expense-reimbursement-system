@@ -1,4 +1,4 @@
-const dao = require('../dao/ticket');
+const dao = require('../models/ticket');
 const uuid = require('uuid');
 
 const createTicket = async (req, res) => {

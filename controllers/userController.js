@@ -1,4 +1,4 @@
-const dao = require('../dao/user');
+const dao = require('../models/user');
 
 const getUsers = async (req, res) => {
   try {
