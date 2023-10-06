@@ -15,19 +15,19 @@ I learned how to implement a 3-tier architecture for my REST API using ExpressJS
 
 ## Future Updates
 Employees can add Reimbursement Types
-- [ ] Travel, Lodging, Food, Other
-- [ ] Employees can view previous requests filtered by type
+- Travel, Lodging, Food, Other
+- Employees can view previous requests filtered by type
 
 Managers can change other users’ roles
-- [ ] Employee to Manager or back to Employee
+- Employee to Manager or back to Employee
 
 Employees can add images of receipts to their reimbursement requests
-- [ ] Upload and store images (in SQL or cloud storage)
+-Upload and store images (in SQL or cloud storage)
 
 User Profile/Account
-- [ ] Track additional user information (name, address, etc.)
-- [ ] Users can edit their account
-- [ ] Users can add a profile picture
+-Track additional user information (name, address, etc.)
+- Users can edit their account
+- Users can add a profile picture
 
 ## Contributors
 - Lennard Vicente
